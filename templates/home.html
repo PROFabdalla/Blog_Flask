@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% block body %}
+<div class="my-2">
+  <div class="container">
+    <div class="row">
+      <h1 class="col-6">this is home page</h1>
+      <a class="btn btn-primary col-6 allpostsbtn" href="{{url_for('posts')}}"
+        >All posts</a
+      >
+    </div>
+  </div>
+</div>
+<div>
+  <img
+    src="{{url_for('static',filename='images/death.jpg')}}"
+    width="100%"
+    height="auto"
+    alt=""
+  />
+</div>
+
+{% endblock %}

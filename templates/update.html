@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block body %}
+<!-- ############################ message ################### -->
+{% for message in get_flashed_messages() %}
+<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
+  {{message}}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+{% endfor %} {% if id == current_user.id %}
+<!-- ############################ form ################### -->
+<h3 class="mt-5">Update User</h3>
+<div class="shadow p-3 my-5 bg-body rounded">
+  <form
+    method="POST"
+    action="/update/{{user_to_update.id}}"
+    class="container w-50"
+  >
+    {{form.hidden_tag()}} {{form.name.label(class="form-label")}}
+    {{form.name(class="form-control",value=user_to_update.name)}}
+    {{form.username.label(class="form-label")}}
+    {{form.username(class="form-control",value=user_to_update.username)}}
+    {{form.email.label(class="form-label")}}
+    {{form.email(class="form-control",value=user_to_update.email)}}
+    {{form.favourate_color.label(class="form-label")}}
+    {{form.favourate_color(class="form-control",value=user_to_update.favourate_color)}}
+    <br />
+    {{form.submit(class="btn btn-secondary")}}
+    <a
+      href="{{ url_for('delete',id=user_to_update.id)}}"
+      class="btn btn-danger"
+    >
+      delete
+    </a>
+  </form>
+</div>
+{% else %}
+<!-- ############################ message ################### -->
+<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
+  <h5>sorry you cant update this user</h5>
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+<h5>Access Denied!!</h5>
+<p>you can't access to this page</p>
+{% endif %} {% endblock %}

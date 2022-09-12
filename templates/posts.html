@@ -1,0 +1,43 @@
+{% extends 'base.html' %} {% block body %}
+<!-- ############################ message ################### -->
+{% for message in get_flashed_messages() %}
+<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
+  {{message}}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+
+{% endfor %}
+<h1 style="text-align: center">All Posts</h1>
+
+{% for post in posts %}
+<div class="shadow p-3 my-5 bg-body rounded">
+  <h3>
+    <a style="text-decoration: none" href="{{url_for('get_post',id=post.id)}}">
+      {{post.title}}</a
+    >
+  </h3>
+  <small>
+    <p>ID: <span class="text-success">{{post.id}}</span></p>
+    <p>By : <span class="text-success">{{post.poster.name}}</span></p>
+    <p><span class="text-primary">{{post.content}}</span></p></small
+  >
+
+  <br />
+  <p>posted at : <span class="text-success">{{post.date_posted}}</span></p>
+  <a
+    class="btn btn-outline-secondary"
+    href="{{url_for('edit_post',id=post.id)}}"
+  >
+    edit post</a
+  >
+  <a href="{{url_for('delete_post',id=post.id)}}" class="btn btn-danger me-3"
+    >delete post</a
+  >
+</div>
+<br />
+{% endfor %} {% endblock %}

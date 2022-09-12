@@ -1,0 +1,36 @@
+{% extends 'base.html' %} {% block body %}
+<!-- ############################ message ################### -->
+{% for message in get_flashed_messages() %}
+<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
+  {{message}}
+  <a href="{{url_for('posts')}}">see all posts =></a>
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+{% endfor %}
+<!-- ############################ form ################### -->
+{% if current_user.is_authenticated %}
+<h3 class="mt-5">add new Post :</h3>
+<div class="shadow p-3 my-5 bg-body rounded">
+  <form method="POST" class="container w-50">
+    {{form.hidden_tag()}} {{form.title.label(class="form-label")}}
+    {{form.title(class="form-control")}} {{form.slug.label(class="form-label")}}
+    {{form.slug(class="form-control")}}
+    {{form.content.label(class="form-label")}}
+    {{form.content(class="form-control",rows="4")}}
+    <br />
+    {{form.submit(class="btn btn-secondary")}}
+  </form>
+</div>
+{% else %}
+<div class="container">
+  <h3 style="text-align: left; display: inline">you must login to add post</h3>
+  <a href="{{url_for('posts')}}" class="btn btn-primary btn-sm"
+    >see all posts</a
+  >
+</div>
+{% endif %} {% endblock %}
