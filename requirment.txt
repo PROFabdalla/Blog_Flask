@@ -5,12 +5,16 @@ pip install flask-wtf         # form package
 # pip install Flask-WTF
 # flask --app app --debug run
 
-pip install werkzeug  #hashed the password
+pip install werkzeug          # hashed the password
 
 pip install flask_login
 
 
-# migrate the model
-$ flask db stamp head
-$ flask db migrate
-$ flask db upgrade
+### text area editor
+pip install flask-ckeditor
+
+
+##### migrate the model
+# $ flask db stamp head
+# $ flask db migrate
+# $ flask db upgrade

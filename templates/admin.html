@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block body %} {% for message in
+get_flashed_messages() %}
+<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
+  {{message}}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+{% endfor %}
+<h1>admin page</h1>
+{% endblock %}

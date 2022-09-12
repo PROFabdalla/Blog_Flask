@@ -16,7 +16,7 @@
 {% if current_user.is_authenticated %}
 <h3 class="mt-5">add new Post :</h3>
 <div class="shadow p-3 my-5 bg-body rounded">
-  <form method="POST" class="container w-50">
+  <form method="POST" class="container">
     {{form.hidden_tag()}} {{form.title.label(class="form-label")}}
     {{form.title(class="form-control")}} {{form.slug.label(class="form-label")}}
     {{form.slug(class="form-control")}}
@@ -25,6 +25,7 @@
     <br />
     {{form.submit(class="btn btn-secondary")}}
   </form>
+  {{ ckeditor.load() }} {{ ckeditor.config(name='content') }}
 </div>
 {% else %}
 <div class="container">

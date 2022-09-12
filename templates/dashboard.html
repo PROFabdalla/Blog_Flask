@@ -15,29 +15,62 @@
 <h3 class="mt-5"></h3>
 
 <div class="card">
-  <div class="card-header">{{current_user.username}}</div>
+  <div class="card-header">Welcome To Your Dashboard</div>
   <div class="card-body">
-    <h5 class="card-title">Welcome To Your Dashboard</h5>
-    <p class="card-text">
-      <strong>ID :</strong>{{current_user.id}}<br />
-      <strong>username:</strong>{{current_user.username}}<br />
-      <strong>name :</strong>{{current_user.name}}<br />
-      <strong>email:</strong>{{current_user.email}}<br />
-      <strong>favourate color:</strong>{{current_user.favourate_color}}<br />
-      <strong>add date:</strong>{{current_user.add_date}}
-    </p>
-    <a href="{{url_for('logout')}}" class="btn btn-secondary btn-sm">logout</a>
-    <a
-      href="{{ url_for('update_user',id=current_user.id)}}"
-      class="btn btn-success btn-sm"
-      >update user</a
-    >
-    <a
-      href="{{ url_for('delete',id=current_user.id)}}"
-      class="btn btn-danger btn-sm"
-    >
-      delete
-    </a>
+    <div class="container">
+      <div class="row">
+        <div class="col-8">
+          <p class="card-text">
+            <strong>ID :</strong>{{current_user.id}}<br />
+            <strong>username:</strong>{{current_user.username}}<br />
+            <strong>name :</strong>{{current_user.name}}<br />
+            <strong>email :</strong>{{current_user.email}}<br />
+            <strong>favourate color:</strong
+            >{{current_user.favourate_color}}<br />
+            <strong>about auther:</strong>{{current_user.about_auther}}<br />
+            <strong>add date:</strong>{{current_user.add_date}}<br />
+            <strong>posts:</strong>
+            {% for post in user.postes %}
+            <a href="{{url_for('get_post',id=post.id)}}">{{post.title}}</a> , {%
+            endfor %}<br />
+            <strong>profile pic :</strong>{{current_user.profile_pic}}<br />
+          </p>
+          <a href="{{url_for('logout')}}" class="btn btn-secondary btn-sm"
+            >logout</a
+          >
+          <a
+            href="{{ url_for('update_user',id=current_user.id)}}"
+            class="btn btn-success btn-sm"
+            >update user</a
+          >
+          <a
+            href="{{ url_for('delete',id=current_user.id)}}"
+            class="btn btn-danger btn-sm"
+          >
+            delete
+          </a>
+        </div>
+        <div class="col-4 dashcard">
+          {% if current_user.profile_pic %}
+          <img
+            class="dshimg"
+            class="card-img-top"
+            src="{{url_for('static',filename='images/'+ current_user.profile_pic)}}"
+            alt=""
+            align="center"
+          />
+
+          {% else %}
+          <img
+            class="dshimg"
+            src="{{url_for('static',filename='images/profilepic.png')}}"
+            alt=""
+            align="center"
+          />
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

@@ -18,6 +18,7 @@
     method="POST"
     action="/update/{{user_to_update.id}}"
     class="container w-50"
+    enctype="multipart/form-data"
   >
     {{form.hidden_tag()}} {{form.name.label(class="form-label")}}
     {{form.name(class="form-control",value=user_to_update.name)}}
@@ -27,6 +28,10 @@
     {{form.email(class="form-control",value=user_to_update.email)}}
     {{form.favourate_color.label(class="form-label")}}
     {{form.favourate_color(class="form-control",value=user_to_update.favourate_color)}}
+    {{form.about_auther.label(class="form-label")}}
+    {{form.about_auther(class="form-control",value=user_to_update.about_auther)}}
+    {{form.profile_pic.label(class="form-label")}}
+    {{form.profile_pic(class="form-control",value=user_to_update.profile_pic)}}
     <br />
     {{form.submit(class="btn btn-secondary")}}
     <a
