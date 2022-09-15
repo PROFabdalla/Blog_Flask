@@ -29,9 +29,24 @@
 </div>
 {% else %}
 <div class="container">
-  <h3 style="text-align: left; display: inline">you must login to add post</h3>
-  <a href="{{url_for('posts')}}" class="btn btn-primary btn-sm"
-    >see all posts</a
-  >
+  <div class="row">
+    <div
+      class="alert alert-danger alert-dismissible fade show mt-5"
+      role="alert"
+    >
+      <div>
+        <h3 style="text-align: center">you must login to add post</h3>
+      </div>
+      <div style="display: flex; justify-content: center">
+        <a href="{{url_for('login')}}" class="btn btn-primary col-2 mt-2 me-2"
+          >login</a
+        >
+
+        <a href="{{url_for('posts')}}" class="btn btn-secondary col-2 mt-2 me-2"
+          >see all posts</a
+        >
+      </div>
+    </div>
+  </div>
 </div>
 {% endif %} {% endblock %}

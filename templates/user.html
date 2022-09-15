@@ -1,4 +1,80 @@
 {% extends 'base.html' %} {% block body %}
+<div class="container mt-3">
+  <div class="row">
+    {% if current_user.profile_pic %}
+    <div class="col-3">
+      <img
+        src="{{url_for('static',filename='images/'+ current_user.profile_pic)}}"
+        alt="Teacher"
+      />
+    </div>
+    {% else %}
+    <div class="col-3">
+      <img src="{{url_for('static',filename='images/profilepic.png')}}" />
+    </div>
+    {% endif %}
+    <div class="col-8 ms-4">
+      <h3 style="font-family: 'cursive'">{{user.name}}</h3>
+      <p>
+        username :<br />
+        <span class="text-success"> {{user.username}}</span>
+      </p>
+      <p>
+        email :<br />
+        <span class="text-success"> {{user.email}}</span>
+      </p>
 
-<h1>hello {{name|title}} to your page</h1>
+      <p>
+        favourate color :<br />
+        <span class="text-success"> {{user.favourate_color}}</span>
+      </p>
+
+      <p>
+        about auther :<br />
+        <span class="text-success"> {{user.about_auther}}</span>
+      </p>
+
+      <p>
+        his posts :<br />
+        {% for post in user.postes %}
+        <a
+          href="{{url_for('get_post',id=post.id)}}"
+          style="text-decoration: none"
+          ><span class=""> {{post.title}}</span></a
+        >
+        <br />
+        {% endfor %}
+      </p>
+    </div>
+  </div>
+</div>
+<div>
+  <span class="shadow p-3 my-2 mx-2 bg-body rounded">
+    <strong>Related Posts:</strong>
+  </span>
+</div>
+<div class="container">
+  <div class="row">
+    {% for post in user.postes %}
+    <div class="shadow p-3 my-2 mx-2 bg-body rounded col-3">
+      <h3>
+        <a
+          style="text-decoration: none"
+          href="{{url_for('get_post',id=post.id)}}"
+        >
+          {{post.title}}</a
+        >
+      </h3>
+      <small>
+        <p>ID: <span class="text-success">{{post.id}}</span></p>
+        <p>By : <span class="text-success">{{post.poster.name}}</span></p>
+        <p><span class="text-primary">{{post.content|safe}}</span></p></small
+      >
+
+      <br />
+      <p>posted at : <span class="text-success">{{post.date_posted}}</span></p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

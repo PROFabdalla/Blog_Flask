@@ -1,126 +1,25 @@
 from flask import Flask, request, jsonify, render_template, flash,redirect,url_for
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
 from flask_login import UserMixin , login_user , LoginManager , login_required , logout_user,current_user
 from webforms import Loginform,Nameform,Passwordform,Postform,Userform,Searchform
-from flask_ckeditor import CKEditor
 from werkzeug.utils import secure_filename
 import uuid as uuid
 import os
-
-
-
-
-
-app = Flask('__name__')
-# data base config
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost/stock"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# the secret key
-app.config['SECRET_KEY'] = "this is my key"
-
-
-UPLOAD_FOLDER = 'static/images/'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# installing app
-db = SQLAlchemy(app)
-Migrate = Migrate(app, db)
-ckeditor = CKEditor(app)
-
-
-
-login_manger = LoginManager()
-login_manger.init_app(app)
-login_manger.login_view='login'
-
-@login_manger.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
-
-# context 
-@app.context_processor
-def base():
-    form = Searchform()
-    return dict(form=form)
-
-
-# return JSON files
-@app.route('/date')
-def get_date():
-    # names = ["abdalla", "mohamed", "hazem", "salwa", "omar", "ali", "laila"]
-    names = {"id":  123,
-             "name":  "mohamed",
-             "eamil":  "mohamed@gmil.com",
-             "address":  "egypt",
-             "phone":  1143306714,
-             "password":  "12345qwe",
-             "skils":  "css"}
-
-    # return {"names": names}
-    return names
-    # return {"date": date.today()}
-
-# -------------------------------- user model --------------------------------------
-class User(db.Model,UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), nullable=False)
-    username = db.Column(db.String(20), nullable=False,unique=True)
-    email = db.Column(db.String(200), nullable=False, unique=True)
-    favourate_color = db.Column(db.String(150))
-    about_auther = db.Column(db.Text(500),nullable=True)
-    add_date = db.Column(db.DateTime, default=datetime.utcnow)
-    password_hashed = db.Column(db.String(150))
-    profile_pic = db.Column(db.String(120),nullable=True)
-    postes          = db.relationship('Posts',backref='poster')
-
-    @property
-    def password(self):
-        raise AttributeError("password is not readable!")
-
-    @password.setter
-    def password(self, password):
-        self.password_hashed = generate_password_hash(password)
-
-    def verify_password(self, password):
-        return check_password_hash(self.password_hashed, password)
-
-    def __repr__(self):
-        return '<Name %r>' % self.name
-
-
-
-
-# ----------------------------------- post model -----------------------------
-
-class Posts(db.Model):
-    id          = db.Column(db.Integer,primary_key=True)
-    title       = db.Column(db.String(255))
-    content     = db.Column(db.Text)
-    # auther      = db.Column(db.String(255))
-    date_posted = db.Column(db.DateTime,default=datetime.utcnow)
-    slug        = db.Column(db.String(255))
-    poster_id   = db.Column(db.Integer,db.ForeignKey('user.id'))
-
+from models import User,Posts
+import app
 
 
 
 # ----------------------------------------------------- routes ------------------
 @app.route('/')
 def home():
-    posts= Posts.query.order_by(- Posts.date_posted)[:3]
-    return render_template('home.html',posts=posts)
+    return render_template('home.html')
 
 
-@app.route('/user')
-def user():
-    user = current_user
-    return render_template('user.html', user=user)
+@app.route('/user/<name>')
+def user(name):
+    return render_template('user.html', name=name)
 
 
 @app.errorhandler(404)
@@ -243,8 +142,7 @@ def test_pw():
         form.email.data = ''
         form.password.data = ''
         user_to_check = User.query.filter_by(email=email).first()
-        if user_to_check:
-            passed = check_password_hash(user_to_check.password_hashed, password)
+        passed = check_password_hash(user_to_check.password_hashed, password)
 
     return render_template('test_password.html', email=email, password=password, user_to_check=user_to_check, passed=passed, form=form)
 
@@ -270,7 +168,7 @@ def add_post():
 #showing all posts
 @app.route('/posts')
 def posts():
-    posts = Posts.query.order_by(- Posts.date_posted)
+    posts = Posts.query.order_by(Posts.date_posted)
     return render_template('posts.html',posts=posts)
 
 #showing spacific post
@@ -384,6 +282,3 @@ def admin():
     else:
         flash("you must be an admin to access admin page")
         return redirect('dashboard')
-
-if __name__ == "__main__":
-    app.run(debug=True)
