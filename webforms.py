@@ -48,12 +48,13 @@ class Userform(FlaskForm):
 
 
 class Postform(FlaskForm):
-    title = StringField("title",validators=[DataRequired()])
+    title     = StringField("title",validators=[DataRequired()])
     # content = StringField("content",validators=[DataRequired()],widget=TextArea())
-    content = CKEditorField("content",validators=[DataRequired()])
-    auther = StringField("auther")
-    slug = StringField("slug",validators=[DataRequired()])
-    submit = SubmitField("submit")
+    content   = CKEditorField("content",validators=[DataRequired()])
+    auther    = StringField("auther")
+    slug      = StringField("slug",validators=[DataRequired()])
+    post_pic  = FileField("post pic")
+    submit    = SubmitField("submit")
 
 
 

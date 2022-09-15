@@ -14,12 +14,14 @@
 <!-- ############################ form ################### -->
 <h3 class="mt-5">Update post</h3>
 <div class="shadow p-3 my-5 bg-body rounded">
-  <form method="POST" class="container w-50">
+  <form method="POST" class="container w-50" enctype="multipart/form-data">
     {{form.hidden_tag()}} {{form.title.label(class="form-label")}}
     {{form.title(class="form-control")}} {{form.slug.label(class="form-label")}}
     {{form.slug(class="form-control")}}
     {{form.content.label(class="form-label")}}
     {{form.content(class="form-control")}}
+    {{form.post_pic.label(class="form-label")}}
+    {{form.post_pic(class="form-control",value=post.profile_pic)}}
     <br />
     {{form.submit(class="btn btn-secondary")}}
   </form>

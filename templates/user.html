@@ -35,22 +35,18 @@
       </p>
 
       <p>
-        his posts :<br />
-        {% for post in user.postes %}
-        <a
-          href="{{url_for('get_post',id=post.id)}}"
-          style="text-decoration: none"
-          ><span class=""> {{post.title}}</span></a
+        his posts :
+
+        <a href="{{url_for('posts')}}" style="text-decoration: none"
+          >{{user.postes|length}}</a
         >
-        <br />
-        {% endfor %}
       </p>
     </div>
   </div>
 </div>
 <div>
   <span class="shadow p-3 my-2 mx-2 bg-body rounded">
-    <strong>Related Posts:</strong>
+    <strong>User Posts:</strong>
   </span>
 </div>
 <div class="container">

@@ -106,6 +106,7 @@ class Posts(db.Model):
     date_posted = db.Column(db.DateTime,default=datetime.utcnow)
     slug        = db.Column(db.String(255))
     poster_id   = db.Column(db.Integer,db.ForeignKey('user.id'))
+    post_pic    = db.Column(db.String(120),nullable=True)
 
 
 
@@ -287,19 +288,41 @@ def edit_post(id):
     form = Postform()
     post = Posts.query.get_or_404(id)
     user_id = current_user.id
-    if form.validate_on_submit():
-        post.title = form.title.data
-        post.slug   = form.slug.data
-        post.content= form.content.data
-        db.session.add(post)
-        db.session.commit()
-        flash("post has been updated successfuly")
-        return redirect(url_for('get_post',id=post.id))
+    if request.method == "POST":
+        post.title = request.form["title"]
+        post.slug   = request.form["slug"]
+        post.content= request.form["content"]
+        if  request.files['post_pic']:
+            post.post_pic = request.files['post_pic']
+            # git file name
+            pic_filename = secure_filename(post.post_pic.filename)
+            pic_name = str(uuid.uuid1()) + "_" + pic_filename
+            # save the image
+            saver = request.files['post_pic']
+            saver.save(os.path.join(app.config['UPLOAD_FOLDER'],pic_name))
+            # override the pic file to its name
+            post.post_pic = pic_name
+
+            try:
+                db.session.add(post)
+                db.session.commit()
+                flash("post updated successfuly")
+                return redirect(url_for('get_post',id=post.id))
+            except:
+                flash("post updated error!! try again")
+                return redirect(url_for('get_post',id=post.id))
+        else:
+            db.session.add(post)
+            db.session.commit()
+            flash("post updated successfuly")
+            return redirect(url_for('get_post',id=post.id))
+
+
     if user_id == post.poster.id:
         form.title.data= post.title
         form.slug.data= post.slug
         form.content.data= post.content
-        return render_template('edit_post.html',form=form)
+        return render_template('edit_post.html',form=form,post=post)
     else:
         flash("you are not the autherized to edit that post")
         return redirect(url_for('posts'))
@@ -380,6 +403,7 @@ def search():
 def admin():
     id = current_user.id
     if id == 1:
+        
         return render_template('admin.html')
     else:
         flash("you must be an admin to access admin page")
