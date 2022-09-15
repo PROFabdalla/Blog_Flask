@@ -57,6 +57,11 @@ class Postform(FlaskForm):
     submit    = SubmitField("submit")
 
 
+class Commentform(FlaskForm):
+    content   = CKEditorField("content",validators=[DataRequired()])
+    submit    = SubmitField("submit")
+
+
 
 class Searchform(FlaskForm):
     searched = StringField("search",validators=[DataRequired()])

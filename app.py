@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
 from flask_login import UserMixin , login_user , LoginManager , login_required , logout_user,current_user
-from webforms import Loginform,Nameform,Passwordform,Postform,Userform,Searchform
+from webforms import Loginform,Nameform,Passwordform,Postform,Userform,Searchform,Commentform
 from flask_ckeditor import CKEditor
 from werkzeug.utils import secure_filename
 import uuid as uuid
@@ -68,16 +68,17 @@ def get_date():
 
 # -------------------------------- user model --------------------------------------
 class User(db.Model,UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), nullable=False)
-    username = db.Column(db.String(20), nullable=False,unique=True)
-    email = db.Column(db.String(200), nullable=False, unique=True)
+    id              = db.Column(db.Integer, primary_key=True)
+    name            = db.Column(db.String(200), nullable=False)
+    username        = db.Column(db.String(20), nullable=False,unique=True)
+    email           = db.Column(db.String(200), nullable=False, unique=True)
     favourate_color = db.Column(db.String(150))
-    about_auther = db.Column(db.Text(500),nullable=True)
-    add_date = db.Column(db.DateTime, default=datetime.utcnow)
+    about_auther    = db.Column(db.Text(500),nullable=True)
+    add_date        = db.Column(db.DateTime, default=datetime.utcnow)
     password_hashed = db.Column(db.String(150))
-    profile_pic = db.Column(db.String(120),nullable=True)
+    profile_pic     = db.Column(db.String(120),nullable=True)
     postes          = db.relationship('Posts',backref='poster')
+    comments        = db.relationship('Comments',backref='commenter')
 
     @property
     def password(self):
@@ -107,6 +108,18 @@ class Posts(db.Model):
     slug        = db.Column(db.String(255))
     poster_id   = db.Column(db.Integer,db.ForeignKey('user.id'))
     post_pic    = db.Column(db.String(120),nullable=True)
+    comments    = db.relationship('Comments',backref='comments')
+
+
+# ----------------------------------- post model -----------------------------
+
+class Comments(db.Model):
+    id          = db.Column(db.Integer,primary_key=True)
+    content     = db.Column(db.Text)
+    date_posted = db.Column(db.DateTime,default=datetime.utcnow)
+    post_id     = db.Column(db.Integer,db.ForeignKey('posts.id'))
+    commnter_id = db.Column(db.Integer,db.ForeignKey('user.id'))
+
 
 
 
@@ -278,7 +291,8 @@ def posts():
 @app.route('/posts/<int:id>')
 def get_post(id):
     post = Posts.query.get_or_404(id)
-    return render_template('onepost.html',post=post)
+    comments = Comments.query.filter_by(post_id=id)
+    return render_template('onepost.html',post=post,comments=comments)
 
 
 #edite spacific post
@@ -408,6 +422,24 @@ def admin():
     else:
         flash("you must be an admin to access admin page")
         return redirect('dashboard')
+
+
+# adding comment
+@app.route('/add-comment/<int:id>',methods=['GET','POST'])
+def add_comment(id):
+    form = Commentform()
+    commnter_id = current_user
+    if form.validate_on_submit():
+        comment = Comments(content=form.content.data,post_id=id,commnter_id=commnter_id.id)
+        form.content.data=''
+
+
+        db.session.add(comment)
+        db.session.commit()
+        flash("comment added successfuly")
+        return redirect(url_for('get_post',id=id))
+    return render_template("comment.html",form=form)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -45,6 +45,11 @@
           class="btn btn-danger btn-sm me-3"
           >delete post</a
         >
+        <a
+          href="{{url_for('add_comment',id=post.id)}}"
+          class="btn btn-primary btn-sm me-3"
+          >add comment</a
+        >
         {% endif %}
       </div>
       <div class="col-4">
@@ -72,6 +77,16 @@
     </div>
   </div>
 </div>
+<h3><strong> comments</strong></h3>
+{% for comment in comments %}
+<div class="p-3 my-5 bg-body rounded">
+  <p>
+    from: <span style="letter-spacing: 5px">{{comment.commenter.name}}</span>
+  </p>
+  <p>{{comment.content|safe}}</p>
+  <p style="font-size: 11px">{{comment.date_posted}}</p>
+</div>
+{% endfor %}
 <br />
 <h1 style="text-align: center">
   <a href="{{url_for('posts')}}" class="btn btn-secondary btn-sm mb-5"

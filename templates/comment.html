@@ -1,0 +1,44 @@
+{% extends 'base.html' %} {% block body %}
+<!-- ############################ message ################### -->
+{% for message in get_flashed_messages() %}
+<div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
+  {{message}}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+{% endfor %}
+<!-- ############################ form ################### -->
+{% if current_user.is_authenticated %}
+<h3 class="mt-5">add new Post :</h3>
+<div class="shadow p-3 my-5 bg-body rounded">
+  <form method="POST" class="container">
+    {{form.hidden_tag()}} {{form.content.label(class="form-label")}}
+    {{form.content(class="form-control",rows="4")}}
+    <br />
+    {{form.submit(class="btn btn-secondary")}}
+  </form>
+  {{ ckeditor.load() }} {{ ckeditor.config(name='content') }}
+</div>
+{% else %}
+<div class="container">
+  <div class="row">
+    <div
+      class="alert alert-danger alert-dismissible fade show mt-5"
+      role="alert"
+    >
+      <div>
+        <h3 style="text-align: center">you must login to add post</h3>
+      </div>
+      <div style="display: flex; justify-content: center">
+        <a href="{{url_for('login')}}" class="btn btn-primary col-2 mt-2 me-2"
+          >login</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %} {% endblock %}
